@@ -22,9 +22,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/YOUR_USERNAME/clued"
-Repository = "https://github.com/YOUR_USERNAME/clued"
-Issues = "https://github.com/YOUR_USERNAME/clued/issues"
+Homepage = "https://github.com/wonnor-pro/clued"
+Repository = "https://github.com/wonnor-pro/clued"
+Issues = "https://github.com/wonnor-pro/clued/issues"
 
 [build-system]
 requires = ["uv_build>=0.11.3,<0.12"]

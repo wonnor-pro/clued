@@ -1,6 +1,6 @@
 """Basic usage examples for clued."""
 
-from clued import clue, get_clues
+from clued import clue
 
 
 def process_order(order_id: str, user_id: int) -> None:
@@ -29,18 +29,4 @@ def apply_charge(card: str, order_id: str) -> None:
 
 
 if __name__ == "__main__":
-    try:
-        process_order("BAD", -1)
-    except Exception as e:
-        print("Exception:", e)
-        print()
-        print("Notes added to exception:")
-        for note in getattr(e, "__notes__", []):
-            print("\t", note)
-        print()
-        print("Structured clues:")
-        for c in get_clues(e):
-            print("\t", f"{c.msg} {c.kv} at {c.filename}:{c.lineno}")
-        print()
-
-        raise
+    process_order("BAD", -1)

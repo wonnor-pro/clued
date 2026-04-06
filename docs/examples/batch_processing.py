@@ -2,7 +2,7 @@
 
 from collections.abc import Mapping, Sequence
 
-from clued import clue, get_clues
+from clued import clue
 
 
 def process_batch(items: Sequence[dict[str, str | bool]]) -> list[dict[str, str | bool]]:
@@ -28,16 +28,4 @@ if __name__ == "__main__":
         {"id": "c", "invalid": True},
         {"id": "d"},
     ]
-
-    try:
-        process_batch(batch)
-    except ValueError as e:
-        print("Failed:", e)
-        print()
-        for note in getattr(e, "__notes__", []):
-            print("\t", note)
-        print()
-        for c in get_clues(e):
-            print("\t", f"Context: {c.msg} {c.kv}")
-        print()
-        raise
+    process_batch(batch)

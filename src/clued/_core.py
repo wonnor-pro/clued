@@ -20,6 +20,14 @@ class CodeLocation(NamedTuple):
         return f"{self.filename}:{self.lineno}"
 
 
+def _capture_loc(depth: int = 1) -> CodeLocation:
+    """Capture the caller's location. ``depth=1`` is the direct caller of this function."""
+    frame = sys._getframe(depth + 1)
+    loc = CodeLocation(frame.f_code.co_filename, frame.f_lineno)
+    del frame
+    return loc
+
+
 @final
 class ClueHandle:
     """The object yielded by ``with clue(...) as handle``."""
@@ -35,9 +43,7 @@ class ClueHandle:
 
     def refine(self, msg: str | None = None, **kv: Any) -> None:
         """Update context in-place. ``None`` values delete the key."""
-        frame = sys._getframe(1)
-        self._refine_loc = CodeLocation(frame.f_code.co_filename, frame.f_lineno)
-        del frame
+        self._refine_loc = _capture_loc(depth=1)
 
         if msg is not None:
             self.msg = msg
@@ -68,9 +74,7 @@ def _format_note(msg: str, kv: dict[str, Any], loc: CodeLocation, depth: int) ->
 def clue(msg: str, **kv: Any) -> AbstractContextManager[ClueHandle]:
     """Context manager that attaches structured context to any exception raised within this block."""
     # Capture caller location here — this function is called directly from user code.
-    frame = sys._getframe(1)
-    loc = CodeLocation(frame.f_code.co_filename, frame.f_lineno)
-    del frame
+    loc = _capture_loc(depth=1)
     return _clue_cm(msg, kv, loc)
 
 

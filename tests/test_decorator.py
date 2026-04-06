@@ -1,6 +1,6 @@
 import pytest
 
-from clued import clue_on_error
+from clued import clue_on_error, clue_on_error_async
 
 
 def test_basic_decorator() -> None:
@@ -44,7 +44,7 @@ def test_no_error_no_overhead() -> None:
 
 @pytest.mark.asyncio
 async def test_async_decorator() -> None:
-    @clue_on_error("async op {x}")
+    @clue_on_error_async("async op {x}")
     async def async_op(x: int) -> None:
         raise ValueError("async fail")
 

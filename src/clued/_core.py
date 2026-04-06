@@ -20,6 +20,14 @@ class CodeLocation(NamedTuple):
         return f"{self.filename}:{self.lineno}"
 
 
+def _capture_loc(depth: int = 1) -> CodeLocation:
+    """Capture the caller's location. ``depth=1`` is the direct caller of this function."""
+    frame = sys._getframe(depth + 1)
+    loc = CodeLocation(frame.f_code.co_filename, frame.f_lineno)
+    del frame
+    return loc
+
+
 @final
 class ClueHandle:
     """The object yielded by ``with clue(...) as handle``."""

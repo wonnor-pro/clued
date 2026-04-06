@@ -5,7 +5,7 @@ from typing import Any, TypeVar
 
 from typing_extensions import ParamSpec
 
-from clued._core import clue
+from clued._core import _capture_loc, _clue_cm
 
 T = TypeVar("T")
 P = ParamSpec("P")
@@ -19,10 +19,11 @@ def clue_on_error(msg_template: str, **extra_kv: Any) -> Callable[[Callable[P, T
 
         @functools.wraps(fn)
         def sync_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+            loc = _capture_loc()
             bound = sig.bind(*args, **kwargs)
             bound.apply_defaults()
             formatted = msg_template.format(**bound.arguments)
-            with clue(formatted, **extra_kv):
+            with _clue_cm(formatted, extra_kv, loc):
                 return fn(*args, **kwargs)
 
         return sync_wrapper
@@ -38,10 +39,11 @@ def clue_on_error_async(
 
         @functools.wraps(fn)
         async def async_wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
+            loc = _capture_loc()
             bound = sig.bind(*args, **kwargs)
             bound.apply_defaults()
             formatted = msg_template.format(**bound.arguments)
-            with clue(formatted, **extra_kv):
+            with _clue_cm(formatted, extra_kv, loc):
                 return await fn(*args, **kwargs)
 
         return async_wrapper

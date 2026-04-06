@@ -1,6 +1,6 @@
 [project]
 name = "clued"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Ergonomic error context for Python exceptions, built on PEP 678 add_note()"
 readme = "README.md"
 license = "MIT"
@@ -16,6 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Typing :: Typed",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Debuggers",
@@ -25,6 +26,7 @@ classifiers = [
 Homepage = "https://github.com/wonnor-pro/clued"
 Repository = "https://github.com/wonnor-pro/clued"
 Issues = "https://github.com/wonnor-pro/clued/issues"
+Changelog = "https://github.com/wonnor-pro/clued/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["uv_build>=0.11.3,<0.12"]
@@ -33,6 +35,7 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "clued"
 module-root = "src"
+version-source = "vcs"
 
 [dependency-groups]
 dev = [

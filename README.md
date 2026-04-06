@@ -160,14 +160,14 @@ class ClueRecord:
 ### Decorator
 
 ```python
-from clued import clue_on_error
+from clued import clue_on_error, clue_on_error_async
 
 @clue_on_error("processing item {item_id}", source="worker")
 def process_item(item_id: str) -> None:
     ...
 
-@clue_on_error("fetch user {user_id}")
-async def fetch_user(user_id: int) -> dict:
+@clue_on_error_async("fetch user {user_id}")
+async def fetch_user(user_id: int) -> dict[str, str]:
     ...
 ```
 

@@ -3,21 +3,11 @@ from collections.abc import Generator, Mapping
 from contextlib import AbstractContextManager, contextmanager
 from contextvars import ContextVar
 from copy import deepcopy
-from typing import Any, NamedTuple, final
+from typing import Any, cast, final
 
-from clued._types import ClueRecord
+from clued._types import ClueRecord, CodeLocation
 
 _clue_stack: ContextVar[tuple["ClueHandle", ...]] = ContextVar("clued_stack", default=())
-
-
-@final
-class CodeLocation(NamedTuple):
-    filename: str
-    lineno: int
-
-    @property
-    def code_path(self) -> str:
-        return f"{self.filename}:{self.lineno}"
 
 
 def _capture_loc(depth: int = 1) -> CodeLocation:
@@ -60,15 +50,10 @@ class ClueHandle:
         self.kv.clear()
         self._refine_loc = None
 
-    def _snapshot(self) -> tuple[str, dict[str, Any], CodeLocation]:
+    def _snapshot(self) -> ClueRecord:
         """Return current (msg, kv copy, loc) for note building."""
         loc = self._refine_loc if self._refine_loc is not None else self._loc
-        return self.msg, dict(self.kv), loc
-
-
-def _format_note(msg: str, kv: dict[str, Any], loc: CodeLocation, depth: int) -> str:
-    note = f"- Clue {depth}: {msg} [{', '.join(f'{k}={v!r}' for k, v in kv.items())}] ({loc.code_path})"
-    return note
+        return ClueRecord(self.msg, frozenset((k, deepcopy(v)) for k, v in self.kv.items()), loc)
 
 
 def clue(msg: str, **kv: Any) -> AbstractContextManager[ClueHandle]:
@@ -85,17 +70,10 @@ def _clue_cm(msg: str, kv: Mapping[str, Any], loc: CodeLocation) -> Generator[Cl
     try:
         yield handle
     except BaseException as exc_value:
-        snap_msg, snap_kv, snap_loc = handle._snapshot()
-        clues: list[ClueRecord] = exc_value.__dict__.setdefault("__clues__", [])
-        clues.append(
-            ClueRecord(
-                msg=snap_msg,
-                kv=frozenset((k, deepcopy(v)) for k, v in snap_kv.items()),
-                filename=snap_loc.filename,
-                lineno=snap_loc.lineno,
-            )
-        )
-        exc_value.add_note(_format_note(snap_msg, snap_kv, snap_loc, len(clues) - 1))
+        clue_record = handle._snapshot()
+        clues = cast(list[ClueRecord], exc_value.__dict__.setdefault("__clues__", []))
+        clues.append(clue_record)
+        exc_value.add_note(clue_record.format_note(len(clues) - 1))
         raise
     finally:
         _clue_stack.reset(token)

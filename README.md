@@ -64,7 +64,32 @@ def process_order(order_id: str, user_id: int) -> None:
 ```text
 ValueError: invalid id format
   File "app.py", line 4, in get_user
-- clue: processing order [order_id='BAD', user_id=-1, step='fetch user'] (app.py:8)
+- Clue 0: processing order [order_id='BAD', user_id=-1, step='fetch user'] (app.py:8)
+```
+
+Clues nest naturally across call boundaries — each layer adds its own note, inner-to-outer:
+
+```python
+from clued import clue
+
+def process_order(order_id: str, user_id: int) -> None:
+    with clue("processing order", order_id=order_id, user_id=user_id):
+        charge_user(order_id, user_id)
+
+def charge_user(order_id: str, user_id: int) -> None:
+    with clue("charging user", user_id=user_id) as ctx:
+        ctx.refine(step="fetch card")
+        card = get_card(user_id)
+
+        ctx.refine(step="apply charge")
+        apply_charge(card, order_id)
+```
+
+```text
+ValueError: invalid card format
+  File "app.py", line 4, in get_card
+- Clue 0: charging user [user_id=-1, step='fetch card'] (app.py:11)
+- Clue 1: processing order [order_id='BAD', user_id=-1] (app.py:5)
 ```
 
 One `with` block. No custom exception class. No `raise from`. The context travels with the exception automatically.
@@ -179,7 +204,7 @@ class ClueFilter(logging.Filter):
 
 When an exception exits a `clue` block, two things happen:
 
-1. A formatted string (`- clue: msg [k=v] (file:line)`) is appended via `add_note()`.
+1. A formatted string (`- Clue N: msg [k=v] (file:line)`) is appended via `add_note()`, where `N` is the depth index (0 = innermost).
 2. A `ClueRecord` is appended to `exc.__clues__` for structured access.
 
 No monkeypatching. No custom exception base class. No runtime overhead on the happy path.

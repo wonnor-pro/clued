@@ -8,7 +8,7 @@ def test_basic_context() -> None:
         with clue("processing failed"):
             raise ValueError("boom")
     notes = exc_info.value.__notes__
-    assert any("clue: processing failed" in n for n in notes)
+    assert any("- Clue 0: processing failed" in n for n in notes)
 
 
 def test_preserves_exception_type() -> None:

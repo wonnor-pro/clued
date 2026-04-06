@@ -4,23 +4,28 @@ from clued import clue, get_clues
 
 
 def process_order(order_id: str, user_id: int) -> None:
-    with clue("processing order", order_id=order_id, user_id=user_id) as ctx:
-        # Simulate some work
-        ctx.refine(step="validate")
-        validate_order(order_id)
-
-        ctx.refine(step="charge")
-        charge_user(user_id)
+    with clue("processing order", order_id=order_id, user_id=user_id):
+        charge_user(order_id, user_id)
 
 
-def validate_order(order_id: str) -> None:
-    if not order_id.startswith("ORD-"):
-        raise ValueError(f"Invalid order ID format: {order_id!r}")
+def charge_user(order_id: str, user_id: int) -> None:
+    with clue("charging user", user_id=user_id) as ctx:
+        ctx.refine(step="fetch card")
+        card = get_card(user_id)
+
+        ctx.refine(step="apply charge")
+        apply_charge(card, order_id)
 
 
-def charge_user(user_id: int) -> None:
+def get_card(user_id: int) -> str:
     if user_id <= 0:
-        raise RuntimeError("Cannot charge invalid user")
+        raise ValueError("invalid card format")
+    return f"card-{user_id}"
+
+
+def apply_charge(card: str, order_id: str) -> None:
+    if not order_id.startswith("ORD-"):
+        raise ValueError(f"cannot charge {card!r}: invalid order ID format: {order_id!r}")
 
 
 if __name__ == "__main__":

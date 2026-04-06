@@ -60,8 +60,8 @@ class ClueHandle:
         return self.msg, dict(self.kv), loc
 
 
-def _format_note(msg: str, kv: dict[str, Any], loc: CodeLocation) -> str:
-    note = f"- clue: {msg} [{', '.join(f'{k}={v!r}' for k, v in kv.items())}] ({loc.code_path})"
+def _format_note(msg: str, kv: dict[str, Any], loc: CodeLocation, depth: int) -> str:
+    note = f"- Clue {depth}: {msg} [{', '.join(f'{k}={v!r}' for k, v in kv.items())}] ({loc.code_path})"
     return note
 
 
@@ -82,8 +82,8 @@ def _clue_cm(msg: str, kv: Mapping[str, Any], loc: CodeLocation) -> Generator[Cl
         yield handle
     except BaseException as exc_value:
         snap_msg, snap_kv, snap_loc = handle._snapshot()
-        exc_value.add_note(_format_note(snap_msg, snap_kv, snap_loc))
-        exc_value.__dict__.setdefault("__clues__", []).append(
+        clues: list[ClueRecord] = exc_value.__dict__.setdefault("__clues__", [])
+        clues.append(
             ClueRecord(
                 msg=snap_msg,
                 kv=frozenset((k, deepcopy(v)) for k, v in snap_kv.items()),
@@ -91,6 +91,7 @@ def _clue_cm(msg: str, kv: Mapping[str, Any], loc: CodeLocation) -> Generator[Cl
                 lineno=snap_loc.lineno,
             )
         )
+        exc_value.add_note(_format_note(snap_msg, snap_kv, snap_loc, len(clues) - 1))
         raise
     finally:
         _clue_stack.reset(token)

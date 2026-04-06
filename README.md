@@ -1,4 +1,6 @@
-# clued
+# Clued
+
+[![CI](https://github.com/wonnor-pro/clued/actions/workflows/ci.yml/badge.svg)](https://github.com/wonnor-pro/clued/actions/workflows/ci.yml)
 
 > Leave clues for your future debugging self.
 
@@ -6,9 +8,15 @@
 
 ## Install
 
+Install with pip
+
 ```bash
 pip install clued
-# or
+```
+
+or install with uv
+
+```bash
 uv add clued
 ```
 

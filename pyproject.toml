@@ -3,8 +3,57 @@ name = "clued"
 version = "0.1.0"
 description = "Ergonomic error context for Python exceptions, built on PEP 678 add_note()"
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
-dependencies = []
 authors = [
     { name = "Connor Wang", email = "wonnor.pro@gmail.com" },
 ]
+keywords = ["error", "exception", "context", "debugging", "add_note", "PEP678"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Debuggers",
+]
+
+[project.urls]
+Homepage = "https://github.com/YOUR_USERNAME/clued"
+Repository = "https://github.com/YOUR_USERNAME/clued"
+Issues = "https://github.com/YOUR_USERNAME/clued/issues"
+
+[build-system]
+requires = ["uv_build>=0.11.3,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "clued"
+module-root = "src"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "mypy>=1.0",
+    "pyright>=1.1",
+    "ruff>=0.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

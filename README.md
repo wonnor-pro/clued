@@ -1,5 +1,8 @@
 # Clued
 
+[![status](https://img.shields.io/pypi/status/clued.svg)](https://pypi.org/project/clued/)
+[![python](https://img.shields.io/pypi/pyversions/clued)](https://pypi.org/project/clued/)
+[![license](https://img.shields.io/pypi/l/clued)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/wonnor-pro/clued/actions/workflows/ci.yml/badge.svg)](https://github.com/wonnor-pro/clued/actions/workflows/ci.yml)
 
 > Leave clues for your future debugging self.

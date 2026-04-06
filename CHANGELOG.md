@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Refactored `CodeLocation` and snapshot logic to make the structure cleaner
+
 ## [0.1.2] - 2026-04-06
 
 ### Fixed

@@ -8,7 +8,7 @@ def test_basic_context() -> None:
         with clue("processing failed"):
             raise ValueError("boom")
     notes = exc_info.value.__notes__
-    assert any("- Clue 0: processing failed" in n for n in notes)
+    assert any("0: processing failed" in n for n in notes)
 
 
 def test_preserves_exception_type() -> None:
@@ -67,5 +67,5 @@ def test_clues_attribute() -> None:
     c = clues[0]
     assert c.msg == "structured"
     assert c.kv == frozenset((("order_id", "abc"),))
-    assert "test_core.py" in c.filename
-    assert isinstance(c.lineno, int)
+    assert "test_core.py" in c.loc.filename
+    assert isinstance(c.loc.lineno, int)

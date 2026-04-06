@@ -75,7 +75,7 @@ def process_order(order_id: str, user_id: int) -> None:
 ```text
 ValueError: invalid id format
   File "app.py", line 4, in get_user
-- Clue 0: processing order [order_id='BAD', user_id=-1, step='fetch user'] (app.py:8)
+- 0: processing order [order_id='BAD', user_id=-1, step='fetch user'] (app.py:8)
 ```
 
 Clues nest naturally across call boundaries — each layer adds its own note, inner-to-outer:
@@ -99,8 +99,8 @@ def charge_user(order_id: str, user_id: int) -> None:
 ```text
 ValueError: invalid card format
   File "app.py", line 4, in get_card
-- Clue 0: charging user [user_id=-1, step='fetch card'] (app.py:11)
-- Clue 1: processing order [order_id='BAD', user_id=-1] (app.py:5)
+- 0: charging user [user_id=-1, step='fetch card'] (app.py:11)
+- 1: processing order [order_id='BAD', user_id=-1] (app.py:5)
 ```
 
 One `with` block. No custom exception class. No `raise from`. The context travels with the exception automatically.

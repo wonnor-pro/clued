@@ -1,6 +1,6 @@
 [project]
 name = "clued"
-dynamic = ["version"]
+version = "0.1.0"
 description = "Ergonomic error context for Python exceptions, built on PEP 678 add_note()"
 readme = "README.md"
 license = "MIT"
@@ -35,7 +35,6 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "clued"
 module-root = "src"
-version-source = "vcs"
 
 [dependency-groups]
 dev = [

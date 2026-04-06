@@ -220,10 +220,17 @@ No monkeypatching. No custom exception base class. No runtime overhead on the ha
 ## Development
 
 ```bash
-uv sync
-uv run pytest
-uv run mypy src/clued
-uv run ruff check src/ tests/
+# Set up or Sync python environment
+make sync
+
+# Ruff formatter
+make fmt
+
+# Ruff linter & Mypy static type check
+make check
+
+# Pytest
+make test
 ```
 
 ## License

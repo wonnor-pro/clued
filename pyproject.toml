@@ -1,6 +1,6 @@
 [project]
 name = "clued"
-version = "0.1.2"
+version = "0.1.3"
 description = "Ergonomic error context for Python exceptions, built on PEP 678 add_note()"
 readme = "README.md"
 license = "MIT"
